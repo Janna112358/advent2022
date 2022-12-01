@@ -1,66 +1,49 @@
 ﻿open System.IO
 
-let input = File.ReadLines("./input.txt")
-// let input = File.ReadLines ("./test_input.txt")
+type tracker<'T> = {
+    CurrentCount: int 
+    Top: 'T
+}
 
-
-let findMaxCount input = 
-
-    let initialState = {| CurrentCount = 0; MaximumCount = 0|}
- 
+let countUntilNewLine (updater: 'T -> int -> 'T) (initialTop: 'T) (input: seq<string>) = 
     let finalState = 
         input 
-        |> Seq.fold (fun state line -> 
+        |> Seq.fold (fun (state: tracker<'T>) line -> 
             match line with 
-            | "" -> 
-                {| CurrentCount = 0; MaximumCount = max state.CurrentCount state.MaximumCount |}    
+            | "" ->
+                // newline: update top and reset current count  
+                let newTop = updater state.Top state.CurrentCount 
+                { state with CurrentCount = 0; Top = newTop}
             | something -> 
                 match System.Int32.TryParse(something) with 
                 | true, count -> 
-                    {| state with CurrentCount = state.CurrentCount + count |}
+                    // valid int, update current count 
+                    { state with CurrentCount = state.CurrentCount + count }
                 | false, _ -> 
-                    printfn "Encountered invalid line %s" something
+                    printfn "Encountered invalid line %s" something 
                     state 
-        ) initialState
-    
-    max finalState.CurrentCount finalState.MaximumCount
+            ) { CurrentCount = 0; Top = initialTop }
 
+    updater finalState.Top finalState.CurrentCount 
 
-let findTopThree input = 
+let findMax = fun input -> countUntilNewLine max 0 input 
 
-    let initialState = {|
-        CurrentCount = 0 
-        TopThree = [0; 0; 0]
-    |}
-
+let findTopThree = 
     let updateTopThree currentTopThree newCount = 
         newCount :: currentTopThree
         |> List.sort 
         |> List.tail 
-
-    let finalState = 
-        input 
-        |> Seq.fold (fun state line -> 
-            match line with 
-            | "" -> 
-                {| CurrentCount = 0; TopThree = updateTopThree state.TopThree state.CurrentCount |}
-            | something -> 
-                match System.Int32.TryParse(something) with 
-                | true, count -> 
-                    {| state with CurrentCount = state.CurrentCount + count |}
-                | false, _ -> 
-                    printfn "Encountered invalid line %s" something 
-                    state 
-        ) initialState 
-    
-    updateTopThree finalState.TopThree finalState.CurrentCount
+    fun input -> countUntilNewLine updateTopThree [0; 0; 0] input 
 
 
 [<EntryPoint>]
 let main args = 
 
+    let input = File.ReadLines("./input.txt")
+    // let input = File.ReadLines ("./test_input.txt")
+
     printfn "Part 1"
-    findMaxCount input 
+    findMax input 
     |> printfn "Maximum is: %i" 
 
     printfn "Part 2"
