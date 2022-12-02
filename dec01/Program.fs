@@ -1,5 +1,7 @@
 ﻿open System.IO
 
+open ElfScript
+
 type tracker<'T> = {
     CurrentCount: int 
     Top: 'T
@@ -9,21 +11,18 @@ let countUntilNewLine (updater: 'T -> int -> 'T) (initialTop: 'T) (input: seq<st
     let finalState = 
         input 
         |> Seq.fold (fun (state: tracker<'T>) line -> 
-            match line with 
-            | "" ->
-                // newline: update top and reset current count  
+            line 
+            |> toElfline 
+            |> function 
+            | Break -> 
                 let newTop = updater state.Top state.CurrentCount 
-                { state with CurrentCount = 0; Top = newTop}
-            | something -> 
-                match System.Int32.TryParse(something) with 
-                | true, count -> 
-                    // valid int, update current count 
-                    { state with CurrentCount = state.CurrentCount + count }
-                | false, _ -> 
-                    printfn "Encountered invalid line %s" something 
-                    state 
+                { state with CurrentCount = 0; Top = newTop }
+            | Int count -> 
+                { state with CurrentCount = state.CurrentCount + count }
+            | Invalid -> 
+                printfn "Invalid line encountered"
+                state
             ) { CurrentCount = 0; Top = initialTop }
-
     updater finalState.Top finalState.CurrentCount 
 
 let findMax = fun input -> countUntilNewLine max 0 input 
