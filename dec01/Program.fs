@@ -1,6 +1,5 @@
 ﻿open System.IO
-
-open ElfScript
+open Calories
 
 type tracker<'T> = {
     CurrentCount: int 
@@ -12,7 +11,7 @@ let countUntilNewLine (updater: 'T -> int -> 'T) (initialTop: 'T) (input: seq<st
         input 
         |> Seq.fold (fun (state: tracker<'T>) line -> 
             line 
-            |> toElfline 
+            |> toCalorieLine
             |> function 
             | Break -> 
                 let newTop = updater state.Top state.CurrentCount 
@@ -38,7 +37,7 @@ let findTopThree =
 [<EntryPoint>]
 let main args = 
 
-    let input = File.ReadLines("./input.txt")
+    let input = File.ReadLines("../input/dec01.txt")
     // let input = File.ReadLines ("./test_input.txt")
 
     printfn "Part 1"

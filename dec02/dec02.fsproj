@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="Calories.fs" />
+    <Compile Include="RPS.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
