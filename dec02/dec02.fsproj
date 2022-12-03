@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="../Common/Math.fs" />  
     <Compile Include="RPS.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="../Common/Math.fs" />
     <Compile Include="Rucksack.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>

@@ -1,12 +1,6 @@
 module RPS 
 
-module Math = 
-    let fixedMod b = fun x -> 
-        let maybeNegative = x % b
-        if maybeNegative < 0 then 
-            maybeNegative + b
-        else 
-            maybeNegative
+open Math
 
 type RPS = 
     | Rock 
@@ -54,7 +48,7 @@ with
 
 let outcome (opponent: RPS) (me: RPS) = 
     me.toOrder - opponent.toOrder
-    |> Math.fixedMod 3 
+    |> fixedMod 3 
     |> MatchOutcome.fromOrder 
 
 let score (opponent: RPS) (me: RPS) = 
@@ -63,7 +57,7 @@ let score (opponent: RPS) (me: RPS) =
 
 let playFromOutcome (opponent: RPS) (outcome: MatchOutcome) = 
     outcome.toOrder + opponent.toOrder
-    |> Math.fixedMod 3 
+    |> fixedMod 3 
     |> RPS.fromOrder 
     
 let scoreFromOutcome (opponent: RPS) (outcome: MatchOutcome) = 
