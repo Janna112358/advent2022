@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="../Common/Math.fs" />
     <Compile Include="Rucksack.fs" />
+    <Compile Include="Badges.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
 
