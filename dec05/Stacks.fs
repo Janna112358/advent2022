@@ -33,7 +33,8 @@ let applyMove (supplies: Supplies) (move: Move) =
         |> List.splitAt (List.length sourceStack - move.Number)
     let newTargetStack = 
         cratesToMove 
-        |> List.rev 
+        // comment in the List.rev for part 1 :)
+        // |> List.rev 
         |> List.append (supplies |> Map.find move.To)
     
     supplies 
