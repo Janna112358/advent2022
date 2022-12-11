@@ -7,6 +7,6 @@ let movesInput = File.ReadLines("../input/dec05_moves.txt")
 
 movesInput 
 |> Seq.choose tryParseMove
-|> Seq.fold (fun supplies move -> applyMove supplies move) inputSupplies
+|> Seq.fold applyMove inputSupplies
 |> getCode 
 |> printfn "%s"
