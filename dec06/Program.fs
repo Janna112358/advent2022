@@ -25,13 +25,13 @@ input
     line 
     |> Seq.fold (fun tracker letter -> 
         let newIndex = tracker.Index + 1
-        let newCandidate, poppedLetter = addToQueue tracker.Candidate letter
+        let newCandidate, poppedLetter = Queue.addItem tracker.Candidate letter
 
         let newMarkerIndex = 
             match tracker.MarkerIndex with 
             | Some alreadyFoundIdx -> Some alreadyFoundIdx 
             | None -> 
-                if not (hasDuplicates newCandidate) && (isFull newCandidate) then 
+                if not (Queue.hasDuplicates newCandidate) && (Queue.isFull newCandidate) then 
                     printfn "marker found! %A" newCandidate.Items
                     Some newIndex 
                 else 

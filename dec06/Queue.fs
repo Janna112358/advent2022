@@ -1,11 +1,12 @@
 module Queue
 
-type Queue<'T> = {
+type Queue<'T> = internal {
     Size: int 
     Items: list<'T>
 }
-with 
-    static member fromList (size: int) (inputList: list<'T>) = 
+
+module Queue = 
+    let fromList (size: int) (inputList: list<'T>) = 
         let sizedItems = 
             match inputList with 
             | input when (List.length inputList <= size) -> 
@@ -17,13 +18,13 @@ with
             Size = size 
             Items = sizedItems
         }
-    static member fromSizedList (inputList: list<'T>) = 
+    let fromSizedList (inputList: list<'T>) = 
         {
             Size = List.length inputList 
             Items = inputList
         }
 
-let addToQueue (queue: Queue<'T>) (item: 'T) = 
+    let addItem (queue: Queue<'T>) (item: 'T) = 
         List.append queue.Items [item]
         |> function 
         | [] -> queue, None 
@@ -32,13 +33,12 @@ let addToQueue (queue: Queue<'T>) (item: 'T) =
         | poppedItem :: rest -> 
             { queue with Items = rest }, Some poppedItem
 
+    let isFull (queue: Queue<'T>) = 
+        List.length queue.Items = queue.Size
 
-let isFull (queue: Queue<'T>) = 
-    List.length queue.Items = queue.Size
-
-let hasDuplicates (queue: Queue<'T>) = 
-    let uniqueCount = 
-        queue.Items 
-        |> Set.ofList 
-        |> Set.count
-    uniqueCount < List.length queue.Items 
+    let hasDuplicates (queue: Queue<'T>) = 
+        let uniqueCount = 
+            queue.Items 
+            |> Set.ofList 
+            |> Set.count
+        uniqueCount < List.length queue.Items 
